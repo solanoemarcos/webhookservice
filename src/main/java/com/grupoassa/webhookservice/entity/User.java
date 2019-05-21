@@ -21,13 +21,13 @@ public class User implements Serializable {
     @Id
     @GeneratedValue
     private Integer id;
-    @Column(name="users.name")
+    @Column(name="name")
     private String name;
-    @Column(name="users.lastname")
+    @Column(name="lastname")
     private String lastname;
-    @Column(name="users.an8")
+    @Column(name="an8")
     private Integer an8;
-    @Column(name="users.mailaddress")
+    @Column(name="mailaddress")
     private String emailaddress;
 
     public String getName() {

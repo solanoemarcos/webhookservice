@@ -27,12 +27,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>${springsecurity.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-openid</artifactId>
             <version>${springsecurity.version}</version>
         </dependency>
@@ -48,7 +42,6 @@
             <artifactId>spring-security-oauth2-client</artifactId>
             <version>${springsecurity.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
@@ -71,16 +64,17 @@
             <artifactId>log4j-core</artifactId>
             <version>2.11.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/javax.persistence -->
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>javax.persistence</artifactId>
-            <version>2.1.1</version>
-        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jpamodelgen</artifactId>
-            <version>5.0.12.Final</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -93,6 +87,7 @@
     </build>
     <properties>
         <springsecurity.version>5.1.2.RELEASE</springsecurity.version>
+        <hibernate.version>5.4.2.Final</hibernate.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
