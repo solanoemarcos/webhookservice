@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author Marcos
  */
 @Configuration
-@EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
     
     @Value("${service-auth-user}")
