@@ -42,5 +42,5 @@ public class WebhookConfig {
         LOGGER.debug(url);
         return new WebhookEntityManager(user,password,url,params);
     }
-    
+
 }
