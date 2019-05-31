@@ -15,12 +15,12 @@ import java.util.Map;
 public class QueryResult {
     
     private String queryText;
-    private Map<String,Object> parameters;
+    private Map<String,String> parameters;
        //"resource": "usuario"
     private boolean allRequiredParamsPresent;
     private String fulfillmentText;
     private ArrayList<FulfillmentMessage> fulfillmentMessages;
-    private ArrayList<OutputContexts> outputContexts;
+    private ArrayList<OutputContext> outputContexts;
     private Intent intent;
     private Integer intentDetectionConfidence;
     private String languageCode;
@@ -33,11 +33,11 @@ public class QueryResult {
         this.queryText = queryText;
     }
 
-    public Map<String, Object> getParameters() {
+    public Map<String, String> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map<String, Object> parameters) {
+    public void setParameters(Map<String, String> parameters) {
         this.parameters = parameters;
     }
 
@@ -65,11 +65,11 @@ public class QueryResult {
         this.fulfillmentMessages = fulfillmentMessages;
     }
 
-    public ArrayList<OutputContexts> getOutputContexts() {
+    public ArrayList<OutputContext> getOutputContexts() {
         return outputContexts;
     }
 
-    public void setOutputContexts(ArrayList<OutputContexts> outputContexts) {
+    public void setOutputContexts(ArrayList<OutputContext> outputContexts) {
         this.outputContexts = outputContexts;
     }
 

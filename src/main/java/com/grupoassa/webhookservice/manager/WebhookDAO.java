@@ -11,6 +11,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,12 +22,12 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Marcos
  */
-public class WebhookEntityManager{
+public class WebhookDAO{
 
     private final EntityManagerFactory EMF ;
-    private final EntityManager ENTITY_MANAGER ;
+    private final EntityManager DATASOURCE ;
     
-    private static final Logger LOGGER = LogManager.getLogger(WebhookEntityManager.class);
+    private static final Logger LOGGER = LogManager.getLogger(WebhookDAO.class);
     
     /**
      * 
@@ -32,7 +36,7 @@ public class WebhookEntityManager{
      * @param url
      * @param params
      */
-    public WebhookEntityManager(String user, String password, String url, String params){
+    public WebhookDAO(String user, String password, String url, String params){
         Map<String, String> properties = new HashMap<>();
         properties.put("javax.persistence.jdbc.user", user);
         LOGGER.debug(user);
@@ -41,7 +45,7 @@ public class WebhookEntityManager{
         properties.put("javax.persistence.jdbc.url", url + params);
         LOGGER.debug(url);
         EMF = Persistence.createEntityManagerFactory("com.grupoassa_webhook_persistance",properties);
-        ENTITY_MANAGER = EMF.createEntityManager();
+        DATASOURCE = EMF.createEntityManager();
     }
     /**
      *
@@ -50,12 +54,12 @@ public class WebhookEntityManager{
      */
     public String persist(Object objToPersist) {
         try {
-            ENTITY_MANAGER.getTransaction().begin();
-            ENTITY_MANAGER.persist(objToPersist);
-            ENTITY_MANAGER.getTransaction().commit();
+            DATASOURCE.getTransaction().begin();
+            DATASOURCE.persist(objToPersist);
+            DATASOURCE.getTransaction().commit();
             return "";
         } catch (PersistenceException e) {
-            ENTITY_MANAGER.getTransaction().rollback();
+            DATASOURCE.getTransaction().rollback();
             return e.getMessage();
         }
     }
@@ -67,12 +71,12 @@ public class WebhookEntityManager{
      */
     public String delete(Object objToDelete) {
         try {
-            ENTITY_MANAGER.getTransaction().begin();
-            ENTITY_MANAGER.remove(objToDelete);
-            ENTITY_MANAGER.getTransaction().commit();
+            DATASOURCE.getTransaction().begin();
+            DATASOURCE.remove(objToDelete);
+            DATASOURCE.getTransaction().commit();
             return "";
         } catch (PersistenceException e) {
-            ENTITY_MANAGER.getTransaction().rollback();
+            DATASOURCE.getTransaction().rollback();
             return e.getMessage();
         }
     }
@@ -85,7 +89,7 @@ public class WebhookEntityManager{
      */
     /*
     public static <T> List<T> selectAll(Class<T> arg0) {
-        Query findAllQuery = ENTITY_MANAGER.createQuery("from " + arg0.getSimpleName());
+        Query findAllQuery = DATASOURCE.createQuery("from " + arg0.getSimpleName());
         List<T> list = findAllQuery.getResultList();
         return list;
     }
@@ -100,7 +104,7 @@ public class WebhookEntityManager{
     /*
     public static <T> List<T> selectOrderBy(Class<T> arg0, GenericFilter... filters){
         /* Create Criteria 
-        CriteriaBuilder cb = ENTITY_MANAGER.getCriteriaBuilder();
+        CriteriaBuilder cb = DATASOURCE.getCriteriaBuilder();
         CriteriaQuery<T> q = cb.createQuery(arg0);
         Root<T> from = q.from(arg0);
         q.select(from);
@@ -112,7 +116,7 @@ public class WebhookEntityManager{
         q.orderBy(orderList);
         /* Return the result 
         
-        List<T> result = ENTITY_MANAGER.createQuery(q).getResultList();
+        List<T> result = DATASOURCE.createQuery(q).getResultList();
         return result;
     }
 */
@@ -125,7 +129,7 @@ public class WebhookEntityManager{
      * @return
      */
     public <T> T select(Class<T> arg0, Integer id) {
-        return ENTITY_MANAGER.find(arg0, id);
+        return DATASOURCE.find(arg0, id);
     }
 
     /**
@@ -140,11 +144,11 @@ public class WebhookEntityManager{
     /*
     public static <T extends GenericEntity> String updateById(Class<T> arg0, T p, Integer id) {
         try {
-            T objectFound = ENTITY_MANAGER.find(arg0, id);
+            T objectFound = DATASOURCE.find(arg0, id);
             if (objectFound != null) {
-                ENTITY_MANAGER.getTransaction().begin();
+                DATASOURCE.getTransaction().begin();
                 p.copyTo(objectFound);
-                ENTITY_MANAGER.getTransaction().commit();
+                DATASOURCE.getTransaction().commit();
                 return "";
             } else {
                 return arg0.getSimpleName() + " not found.";
@@ -155,16 +159,9 @@ public class WebhookEntityManager{
     }
     */
 
-    /**
-     *
-     * @param <T>
-     * @param arg0
-     * @param id
-     * @return
-     */
     /*
     public static <T extends GenericEntity> String deletebyId(Class<T> arg0, Integer id) {
-        T objectFound = ENTITY_MANAGER.find(arg0, id);
+        T objectFound = DATASOURCE.find(arg0, id);
         if (objectFound != null) {
             return delete(objectFound);
         } else {
@@ -172,4 +169,27 @@ public class WebhookEntityManager{
         }
     }
 */
+    
+        /**
+     *
+     * @param <T>
+     * @param arg0
+     * @param resource
+     * @param id
+     * @return
+     */
+    public <T> String selectNoKey(Class<T> arg0, String resource, Integer id) {
+        //Create CriteriaBuilder
+        CriteriaBuilder criteriaBuilder = DATASOURCE.getCriteriaBuilder();
+        CriteriaQuery<Object> query = criteriaBuilder.createQuery();
+        //Add From to query
+        Root<T> from = query.from(arg0);
+        query.select(from.get(resource));
+        //Add where to query
+        //ParameterExpression<Integer> p = criteriaBuilder.parameter(Integer.class);
+        query.where(criteriaBuilder.equal(from.get("id"), 0));
+        //Return a single result from query
+        Object result = DATASOURCE.createQuery(query).getSingleResult();
+        return result.toString();
+    }
 }

@@ -7,16 +7,23 @@ package com.grupoassa.webhookservice.controller;
 
 import com.grupoassa.webhookservice.entity.User;
 import com.grupoassa.webhookservice.input.FulfillmentRequest;
-import com.grupoassa.webhookservice.manager.WebhookEntityManager;
+import com.grupoassa.webhookservice.input.OutputContext;
+import com.grupoassa.webhookservice.manager.WebhookDAO;
 import com.grupoassa.webhookservice.output.FulfillmentResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
@@ -28,17 +35,30 @@ public class WebhookController {
     private static final Logger LOGGER = LogManager.getLogger(WebhookController.class);
     
     @Autowired
-    private WebhookEntityManager entManager;
+    protected WebhookDAO webhookDAO;
     
-    @RequestMapping(name="/action", method=POST)
-    public FulfillmentResponse WebhookEntryPoint(@RequestBody FulfillmentRequest request) {
+    @PostMapping("/action")
+    public ModelAndView WebhookEntryPoint(ModelMap model, @RequestBody FulfillmentRequest request) {
+        //Obtengo Parametros
+        Map<String,String> mapaParametros = request.getQueryResult().getParameters();
+        Set<String> paramNames = mapaParametros.keySet();
+        paramNames.forEach((ps) -> {
+            model.addAttribute(ps, mapaParametros.get(ps));
+        });
+        //Obtengo Intent Name
+        ArrayList<OutputContext> intents = request.getQueryResult().getOutputContexts();
+        Collections.sort(intents);
+        String intentName = intents.get(0).getRealName();
+        return new ModelAndView("redirect:/"+intentName, model);
+    }
+    
+    
+    @GetMapping("/consulta_recurso")
+    public FulfillmentResponse ConsultaRecurso(ModelMap model, @RequestParam("resource") String resource){
+        String selectResult = this.webhookDAO.selectNoKey(User.class, resource, 0);
         
-        Set<String> resource = request.getQueryResult().getParameters().keySet();
         FulfillmentResponse fs = new FulfillmentResponse();
-        User u;
-        u = entManager.select(User.class,0);
-        LOGGER.info(u.toString());
-        fs.addMessage("Su usuario es: "+ u.getEmailaddress());
+        fs.addMessage("Su " + resource +" es: "+ selectResult.trim());
         return fs;
     }
 }

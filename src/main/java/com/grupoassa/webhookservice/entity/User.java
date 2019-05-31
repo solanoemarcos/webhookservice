@@ -28,7 +28,7 @@ public class User implements Serializable {
     @Column(name="an8")
     private Integer an8;
     @Column(name="mailaddress")
-    private String emailaddress;
+    private String mailaddress;
 
     public String getName() {
         return name;
@@ -55,11 +55,11 @@ public class User implements Serializable {
     }
 
     public String getEmailaddress() {
-        return emailaddress;
+        return mailaddress;
     }
 
     public void setEmailaddress(String emailaddress) {
-        this.emailaddress = emailaddress;
+        this.mailaddress = emailaddress;
     }
 
     public Integer getId() {

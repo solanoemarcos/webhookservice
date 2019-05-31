@@ -9,7 +9,7 @@ package com.grupoassa.webhookservice.input;
  *
  * @author mesolano
  */
-public class OutputContext {
+public class OutputContext implements Comparable{
     private String name;
     private Integer lifespanCount;
     private Parameters parameters;
@@ -36,5 +36,16 @@ public class OutputContext {
 
     public void setParameters(Parameters parameters) {
         this.parameters = parameters;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        int i = ((OutputContext)o).getLifespanCount().compareTo(this.lifespanCount);
+        return i;
+    }
+    
+    public String getRealName(){
+        String[] arr = this.name.split("/");
+        return arr[arr.length-1];
     }
 }

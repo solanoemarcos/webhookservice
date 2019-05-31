@@ -5,8 +5,7 @@
  */
 package com.grupoassa.webhookservice.main;
 
-import com.grupoassa.webhookservice.entity.User;
-import com.grupoassa.webhookservice.manager.WebhookEntityManager;
+import com.grupoassa.webhookservice.manager.WebhookDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,11 +35,11 @@ public class WebhookConfig {
      * @return
      */
     @Bean
-    public WebhookEntityManager webhookEntityManager(){
+    public WebhookDAO webhookDAO(){
         LOGGER.debug(user);
         LOGGER.debug(password);
         LOGGER.debug(url);
-        return new WebhookEntityManager(user,password,url,params);
+        return new WebhookDAO(user,password,url,params);
     }
 
 }
