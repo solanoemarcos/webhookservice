@@ -61,4 +61,33 @@ public class WebhookController {
         fs.addMessage("Su " + resource +" es: "+ selectResult.trim());
         return fs;
     }
+    
+    @GetMapping("/turno")
+    public FulfillmentResponse altaTurno(ModelMap model){
+        //String selectResult = this.webhookDAO.selectNoKey(User.class, resource, 0);
+        
+        FulfillmentResponse fs = new FulfillmentResponse();
+        fs.addMessage("Se ha generado el nuevo turno.");
+        return fs;
+    }
+    
+    
+    @GetMapping("/cancelar")
+    public FulfillmentResponse bajaTurno(ModelMap model, @RequestParam("resource") String resource){
+        //String selectResult = this.webhookDAO.selectNoKey(User.class, resource, 0);
+        
+        FulfillmentResponse fs = new FulfillmentResponse();
+        fs.addMessage("Su turno se ha cancelado.");
+        return fs;
+    }
+    
+    
+    @GetMapping("/modificacion")
+    public FulfillmentResponse modificaTurno(ModelMap model, @RequestParam("resource") String resource){
+        //String selectResult = this.webhookDAO.selectNoKey(User.class, resource, 0);
+        
+        FulfillmentResponse fs = new FulfillmentResponse();
+        fs.addMessage("Su turno se ha modificado.");
+        return fs;
+    }
 }
